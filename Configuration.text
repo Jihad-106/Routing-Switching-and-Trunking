@@ -1,0 +1,270 @@
+
+========================
+SW1 - ACCESS SWITCH
+========================
+
+enable
+configure terminal
+
+hostname SW1
+no ip domain-lookup
+
+spanning-tree mode rapid pvst
+spanning-tree portfast default
+
+interface range fa0/11,fa0/22
+ switchport mode trunk
+ switchport trunk allowed vlan 10,20,777
+
+interface gig0/1
+ switchport mode trunk
+ switchport trunk allowed vlan 10,20,777
+exit
+
+vtp domain OGIT
+vtp mode client
+
+
+vlan 10
+ name SALES
+exit
+
+vlan 20
+ name HR
+exit
+
+vlan 777
+ name SERVER
+exit
+
+interface fa0/2
+ switchport mode access
+ switchport access vlan 10
+ spanning-tree portfast
+exit
+
+interface fa0/1
+ switchport mode access
+ switchport access vlan 20
+exit
+
+
+end
+write memory
+
+
+========================
+SW2 - ACCESS SWITCH
+========================
+
+enable
+configure terminal
+
+hostname SW1
+no ip domain-lookup
+
+spanning-tree mode rapid pvst
+spanning-tree portfast default
+
+interface range fa0/11,fa0/22
+ switchport mode trunk
+ switchport trunk allowed vlan 10,20,777
+
+interface gig0/2
+ switchport mode trunk
+ switchport trunk allowed vlan 10,20,777
+exit
+
+vtp domain OGIT
+vtp mode client
+
+
+
+vlan 10
+ name SALES
+exit
+
+vlan 20
+ name HR
+exit
+
+vlan 777
+ name SERVER
+exit
+
+interface fa0/1
+ switchport mode access
+ switchport access vlan 20
+exit
+
+interface fa0/2
+ switchport mode access
+ switchport access vlan 10
+exit
+
+interface fa0/5
+ switchport mode access
+ switchport access vlan 777
+exit
+
+
+end
+write memory
+
+
+========================
+SW3- LAYER 3 SWITCH
+========================
+
+enable
+configure terminal
+
+hostname SW3
+no ip domain-lookup
+
+spanning-tree mode rapid pvst
+spanning-tree portfast default
+
+interface  range gig0/1,gig0/2
+ switchport mode trunk
+ switchport trunk allowed vlan 10,20,777
+exit
+
+vtp domain OGIT
+vtp mode server
+
+
+
+! Enable Layer 3 Routing
+ip routing
+
+! VLAN Configuration
+vlan 10
+ name SALES
+exit
+
+vlan 20
+ name HR
+exit
+
+vlan 777
+ name SERVER
+exit
+
+
+! VLAN 10 - Gateway + DHCP Relay
+interface vlan 10
+ ip address 10.16.0.1 255.255.255.0
+ ip helper-address 192.168.1.100
+ no shutdown
+exit
+
+
+! VLAN 20 - Gateway + DHCP Relay
+interface vlan 20
+ ip address 172.16.0.1 255.255.255.0
+ ip helper-address 192.168.1.100
+ no shutdown
+exit
+
+
+! VLAN 777 - Server Gateway
+interface vlan 777
+ ip address 192.168.1.1 255.255.255.0
+ no shutdown
+exit
+
+end
+write memory
+
+
+========================
+SERVER CONFIGURATION
+========================
+
+IP Address      : 192.168.1.100
+Subnet Mask     : 255.255.255.0
+Default Gateway : 192.168.1.1
+DNS Server      : 192.168.1.100
+
+
+========================
+DHCP SERVER
+========================
+
+DHCP Service: ON
+
+
+VLAN 10 DHCP POOL
+-----------------
+
+Pool Name       : VLAN10
+Default Gateway: 10.16.0.1
+DNS Server      : 192.168.1.100
+Start IP        : 10.16.0.10
+Subnet Mask     : 255.255.255.0
+Maximum Users   : 100
+
+
+VLAN 20 DHCP POOL
+-----------------
+
+Pool Name       : VLAN20
+Default Gateway: 172.16.0.1
+DNS Server      : 192.168.1.100
+Start IP        : 172.16.0.10
+Subnet Mask     : 255.255.255.0
+Maximum Users   : 100
+
+
+========================
+DNS CONFIGURATION
+========================
+
+DNS Service: ON
+
+A Record
+--------
+Name    : www.ogit.com
+Address : 192.168.1.100
+
+
+========================
+DHCP RELAY
+========================
+
+VLAN 10:
+ip helper-address 192.168.1.100
+
+VLAN 20:
+ip helper-address 192.168.1.100
+
+
+========================
+VERIFICATION
+========================
+
+show vlan brief
+show interfaces trunk
+show ip interface brief
+show ip route
+show running-config
+
+
+========================
+CONNECTIVITY TEST
+========================
+
+ping 10.16.0.1
+ping 172.16.0.1
+ping 192.168.1.1
+ping 192.168.1.100
+
+DNS Test:
+ping www.ogit.com
+nslookup www.ogit.com
+
+
+==================================================
+                    END
+==================================================
