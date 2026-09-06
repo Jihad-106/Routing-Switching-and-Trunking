@@ -2,12 +2,6 @@
 
 ![Network Topology](topology.png)
 
-```text
-.
-├── README.md
-├── Configuration.txt
-├── Routing-Switching-Trunking.pkt
-└── topology.png
 
 ## 📌 Overview
 
