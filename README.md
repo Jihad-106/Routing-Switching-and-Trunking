@@ -1,6 +1,6 @@
 # Routing, Switching & Trunking Lab
 
-![Network Topology](topology.png)
+(topology.png)
 
 
 ## 📌 Overview
