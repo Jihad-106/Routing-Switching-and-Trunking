@@ -24,3 +24,11 @@ The lab demonstrates how multiple VLANs communicate through a **Layer 3 Multilay
 - Configure a Server VLAN
 - Configure DHCP and DNS Services
 - Verify network connectivity using ping and show commands
+
+
+```text
+.
+├── README.md
+├── Configuration.txt
+├── Routing-Switching-Trunking.pkt
+└── topology.png
