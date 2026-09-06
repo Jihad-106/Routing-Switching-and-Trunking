@@ -1,5 +1,8 @@
 # Routing, Switching & Trunking Lab
 
+![Network Topology](topology.png)
+
+
 ## 📌 Overview
 
 This project is a Cisco Packet Tracer lab focused on the fundamentals of **Routing, Switching, VLANs, and Trunking**.
